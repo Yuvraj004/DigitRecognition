@@ -1,11 +1,10 @@
 from flask import render_template, request, Response
 from flask.views import MethodView, View
-
 from flask.views import View
-
-from repo import ClassifierRepo
-from services import PredictDigitService
-from settings import CLASSIFIER_STORAGE
+import requests
+from app.repo import ClassifierRepo
+from app.services import PredictDigitService
+from app.settings import CLASSIFIER_STORAGE
 
 
 class IndexView(View):

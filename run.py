@@ -1,7 +1,6 @@
 import os
-
 from flask import Flask
-from views import PredictDigitView, IndexView
+from app.views import PredictDigitView, IndexView
 
 
 app = Flask(__name__)
@@ -18,6 +17,6 @@ app.add_url_rule(
     methods=['GET']
 )
 
-if __name__ == 'main':
+if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)

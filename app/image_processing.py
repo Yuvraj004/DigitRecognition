@@ -1,6 +1,5 @@
 import numpy as np
 from skimage import exposure # type: ignore
-import base64
 from PIL import Image, ImageOps, ImageChops
 from io import BytesIO
 import base64
@@ -23,15 +22,15 @@ def replace_transparent_background(image):
 
     return Image.fromarray(image_arr)
 
-# def trim_borders(image):
-#     bg = Image.new("P", image.size, image.getpixel((0,0)))
-#     diff = ImageChops.difference(image, bg)
-#     diff = ImageChops.add(diff, diff, 2.0, -100)
-#     bbox = diff.getbbox()
-#     if bbox:
-#         return image.crop(bbox)
+def trim_borders(image):
+    bg = Image.new("P", image.size, image.getpixel((0,0)))
+    diff = ImageChops.difference(image, bg)
+    diff = ImageChops.add(diff, diff, 2.0, -100)
+    bbox = diff.getbbox()
+    if bbox:
+        return image.crop(bbox)
     
-#     return image
+    return image
 
 def pad_image(image):
     return ImageOps.expand(image, border=30, fill='#fff')
@@ -48,9 +47,10 @@ def resize_image(image):
 
 def process_image(image):
     img  = replace_transparent_background(image)
-    # img = trim_borders(img)
+    img = trim_borders(img)
     img = pad_image(img)
     img = to_grayscale(img)
     img_inv =invert_colors(img)
     img_final = resize_image(img_inv)
-    return img_final
+    
+    return Image.fromarray(img_final)

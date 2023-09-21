@@ -1,7 +1,9 @@
 from sklearn.datasets import load_digits
-
 from app.classifier import ClassifierFactory
 from app.image_processing import process_image 
+import requests
+from PIL import Image
+from io import BytesIO
 
 class PredictDigitService:
     def __init__(self, repo):
@@ -17,10 +19,17 @@ class PredictDigitService:
             )
             self.repo.update(classifier)
         
-        x = process_image(image_data_uri)
+        # Extract image from URI
+        response = requests.get(image_data_uri)
+        if response.status_code != 200:
+            return 0
+        image_data = BytesIO(response.content)
+        image = Image.open(image_data)
+
+        # Process image
+        x = process_image(image)
         if x is None:
             return 0
 
-        prediction = classifier.predict(x)[0] # type: ignore
+        prediction = classifier.predict(x)[0]  # type: ignore
         return prediction
-    
